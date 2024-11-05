@@ -22,8 +22,8 @@ const stop = () => emit('stop');
 
 <style scoped>
 /* 
-  .player-controls {
+.player-controls {
 
-  }
-  */
+}
+*/
 </style>
