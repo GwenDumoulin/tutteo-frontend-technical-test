@@ -14,11 +14,3 @@ defineProps({
   },
 });
 </script>
-
-<style scoped>
-/* 
-.track-info {
-
-}
-*/
-</style>

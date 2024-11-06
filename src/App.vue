@@ -13,7 +13,8 @@ import AudioPlayer from './components/AudioPlayer.vue';
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100vw;
   height: 100vh;
-  background-color: #f9f9f9;
+  background-color: #13122a;
 }
 </style>
