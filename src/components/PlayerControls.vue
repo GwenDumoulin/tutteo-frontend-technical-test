@@ -1,5 +1,6 @@
 <template>
   <div class="player-controls">
+    <button @click="$emit('prev')">Prev</button>
     <button v-if="!isPlaying" @click="$emit('play')">Play</button>
     <button v-if="isPlaying" @click="$emit('pause')">Pause</button>
     <button @click="$emit('next')">Next</button>

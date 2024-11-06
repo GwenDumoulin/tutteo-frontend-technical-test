@@ -6,6 +6,7 @@
       @play="play"
       @pause="pause"
       @next="next"
+      @prev="prev"
     />
     <TimelineSlider
       :currentTime="currentTime"
@@ -144,6 +145,15 @@ export default {
       isPlaying.value = true;
     };
 
+    const prev = () => {
+      currentTrackIndex.value =
+        (currentTrackIndex.value - 1 + tracks.length) % tracks.length;
+      currentTrack.value = tracks[currentTrackIndex.value];
+      audio.src = currentTrack.value.audioUrl;
+      audio.play();
+      isPlaying.value = true;
+    };
+
     audio.addEventListener('ended', next);
 
     return {
@@ -153,6 +163,7 @@ export default {
       play,
       pause,
       next,
+      prev,
       isPlaying,
       seek,
     };
