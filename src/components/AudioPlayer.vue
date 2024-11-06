@@ -1,7 +1,12 @@
 <template>
   <div class="audio-player">
     <TrackInfo :track="currentTrack" />
-    <PlayerControls @play="play" @pause="pause" @stop="stop" @next="next" />
+    <PlayerControls
+      :isPlaying="isPlaying"
+      @play="play"
+      @pause="pause"
+      @next="next"
+    />
     <TimelineSlider
       :currentTime="currentTime"
       :duration="duration"
@@ -11,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref } from 'vue';
 import TrackInfo from './TrackInfo.vue';
 import PlayerControls from './PlayerControls.vue';
 import TimelineSlider from './TimelineSlider.vue';
@@ -104,22 +109,14 @@ export default {
     const audio = new Audio(currentTrack.value.audioUrl);
     const currentTime = ref(0);
     const duration = ref(0);
-
-    onMounted(() => {
-      audio.addEventListener('timeupdate', () => {
-        currentTime.value = audio.currentTime;
-        duration.value = audio.duration;
-      });
-
-      audio.addEventListener('ended', next);
-    });
-
     const isPlaying = ref(false);
 
+    audio.addEventListener('timeupdate', () => {
+      currentTime.value = audio.currentTime;
+      duration.value = audio.duration;
+    });
+
     const play = () => {
-      if (!isPlaying.value) {
-        audio.src = currentTrack.value.audioUrl;
-      }
       audio
         .play()
         .then(() => {
@@ -132,12 +129,6 @@ export default {
 
     const pause = () => {
       audio.pause();
-      isPlaying.value = true;
-    };
-
-    const stop = () => {
-      audio.pause();
-      audio.currentTime = 0;
       isPlaying.value = false;
     };
 
@@ -150,7 +141,10 @@ export default {
       currentTrack.value = tracks[currentTrackIndex.value];
       audio.src = currentTrack.value.audioUrl;
       audio.play();
+      isPlaying.value = true;
     };
+
+    audio.addEventListener('ended', next);
 
     return {
       currentTime,
@@ -158,9 +152,9 @@ export default {
       currentTrack,
       play,
       pause,
-      stop,
-      seek,
       next,
+      isPlaying,
+      seek,
     };
   },
 };
