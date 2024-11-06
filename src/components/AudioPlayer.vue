@@ -1,7 +1,7 @@
 <template>
   <div class="audio-player">
     <TrackInfo :track="currentTrack" />
-    <PlayerControls @play="play" @pause="pause" @stop="stop" />
+    <PlayerControls @play="play" @pause="pause" @stop="stop" @next="next" />
     <TimelineSlider
       :currentTime="currentTime"
       :duration="duration"
@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import TrackInfo from './TrackInfo.vue';
 import PlayerControls from './PlayerControls.vue';
 import TimelineSlider from './TimelineSlider.vue';
@@ -25,6 +25,13 @@ const tracks = [
     audioUrl: new URL('../assets/amalgam-217007.mp3', import.meta.url).href,
   },
   {
+    title: 'Flow',
+    artist: 'Loksii',
+    thumbnail:
+      'https://cdn.pixabay.com/audio/2024/05/24/15-24-57-666_200x200.png',
+    audioUrl: new URL('../assets/flow-211881.mp3', import.meta.url).href,
+  },
+  {
     title: 'Creative Technology Showreel',
     artist: 'Pumpupthemind',
     thumbnail:
@@ -33,13 +40,6 @@ const tracks = [
       '../assets/creative-technology-showreel-241274.mp3',
       import.meta.url
     ).href,
-  },
-  {
-    title: 'Flow',
-    artist: 'Loksii',
-    thumbnail:
-      'https://cdn.pixabay.com/audio/2024/05/24/15-24-57-666_200x200.png',
-    audioUrl: new URL('../assets/flow-211881.mp3', import.meta.url).href,
   },
   {
     title: 'In Slow Motion (Inspiring Ambient Lounge)',
@@ -99,38 +99,69 @@ const tracks = [
 export default {
   components: { TrackInfo, PlayerControls, TimelineSlider },
   setup() {
-    const currentTrack = ref(tracks[0]);
+    const currentTrackIndex = ref(0);
+    const currentTrack = ref(tracks[currentTrackIndex.value]);
     const audio = new Audio(currentTrack.value.audioUrl);
-    console.log(currentTrack);
-    console.log(audio);
     const currentTime = ref(0);
     const duration = ref(0);
 
-    audio.addEventListener('timeupdate', () => {
-      currentTime.value = audio.currentTime;
-      duration.value = audio.duration;
+    onMounted(() => {
+      audio.addEventListener('timeupdate', () => {
+        currentTime.value = audio.currentTime;
+        duration.value = audio.duration;
+      });
+
+      audio.addEventListener('ended', next);
     });
 
+    const isPlaying = ref(false);
+
     const play = () => {
-      audio.play().catch((error) => {
-        console.error('Error playing audio:', error);
-      });
+      if (!isPlaying.value) {
+        audio.src = currentTrack.value.audioUrl;
+      }
+      audio
+        .play()
+        .then(() => {
+          isPlaying.value = true;
+        })
+        .catch((error) => {
+          console.error('Error playing audio:', error);
+        });
     };
 
     const pause = () => {
       audio.pause();
+      isPlaying.value = true;
     };
 
     const stop = () => {
       audio.pause();
       audio.currentTime = 0;
+      isPlaying.value = false;
     };
 
     const seek = (time: number) => {
       audio.currentTime = time;
     };
 
-    return { currentTime, duration, currentTrack, play, pause, stop, seek };
+    const next = () => {
+      currentTrackIndex.value = (currentTrackIndex.value + 1) % tracks.length;
+      currentTrack.value = tracks[currentTrackIndex.value];
+      audio.src = currentTrack.value.audioUrl;
+      audio.play();
+    };
+
+    return {
+      currentTime,
+      duration,
+      currentTrack,
+      play,
+      pause,
+      stop,
+      seek,
+      next,
+    };
   },
 };
 </script>
