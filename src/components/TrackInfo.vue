@@ -7,9 +7,7 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps } from 'vue';
-
-const props = defineProps({
+defineProps({
   track: {
     type: Object,
     required: true,

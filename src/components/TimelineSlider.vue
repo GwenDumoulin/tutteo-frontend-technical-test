@@ -4,14 +4,14 @@
       type="range"
       min="0"
       :max="duration"
-      v-model="currentTime"
+      v-model="localCurrentTime"
       @input="onSeek"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 
 export default defineComponent({
   props: {
@@ -26,15 +26,20 @@ export default defineComponent({
   },
   emits: ['seek'],
   setup(props, { emit }) {
+    const localCurrentTime = ref(props.currentTime);
+
+    watch(
+      () => props.currentTime,
+      (newCurrentTime) => {
+        localCurrentTime.value = newCurrentTime;
+      }
+    );
+
     const onSeek = () => {
-      emit('seek', props.currentTime);
+      emit('seek', localCurrentTime.value);
     };
 
-    return { onSeek };
+    return { localCurrentTime, onSeek };
   },
 });
 </script>
-
-<style scoped>
-/* Style pour le slider */
-</style>
