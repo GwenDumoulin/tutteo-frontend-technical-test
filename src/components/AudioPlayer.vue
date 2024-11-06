@@ -5,6 +5,7 @@
       :isPlaying="isPlaying"
       @play="play"
       @pause="pause"
+      @stop="stop"
       @next="next"
       @prev="prev"
     />
@@ -128,6 +129,12 @@ export default {
         });
     };
 
+    const stop = () => {
+      audio.pause();
+      audio.currentTime = 0;
+      isPlaying.value = false;
+    };
+
     const pause = () => {
       audio.pause();
       isPlaying.value = false;
@@ -162,6 +169,7 @@ export default {
       currentTrack,
       play,
       pause,
+      stop,
       next,
       prev,
       isPlaying,
