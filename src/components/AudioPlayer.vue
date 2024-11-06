@@ -1,19 +1,44 @@
 <template>
-  <div class="audio-player">
-    <TrackInfo :track="currentTrack" />
-    <PlayerControls
-      :isPlaying="isPlaying"
-      @play="play"
-      @pause="pause"
-      @stop="stop"
-      @next="next"
-      @prev="prev"
+  <div :class="$style.audioPlayer">
+    <div :class="$style.trackInfo">
+      <img
+        :src="currentTrack.thumbnail"
+        alt="Thumbnail"
+        :class="$style.thumbnail"
+      />
+      <div>
+        <div :class="$style.title">{{ currentTrack.title }}</div>
+        <div :class="$style.artist">{{ currentTrack.artist }}</div>
+      </div>
+    </div>
+
+    <input
+      type="range"
+      :class="$style.timelineSlider"
+      v-model="currentTime"
+      :min="0"
+      :max="duration"
+      :value="currentTime"
+      @input="seek(currentTime)"
     />
-    <TimelineSlider
-      :currentTime="currentTime"
-      :duration="duration"
-      @seek="seek"
-    />
+
+    <div :class="$style.controls">
+      <button :class="$style.button" @click="prev">
+        <i class="fas fa-step-backward"></i>
+      </button>
+      <button v-if="!isPlaying" :class="$style.button" @click="play">
+        <i class="fas fa-play"></i>
+      </button>
+      <button v-else :class="$style.button" @click="pause">
+        <i class="fas fa-pause"></i>
+      </button>
+      <button :class="$style.button" @click="stop">
+        <i class="fas fa-stop"></i>
+      </button>
+      <button :class="$style.button" @click="next">
+        <i class="fas fa-step-forward"></i>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -178,3 +203,72 @@ export default {
   },
 };
 </script>
+
+<style module>
+.audioPlayer {
+  background-color: #13122a;
+  color: white;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.trackInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.thumbnail {
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
+  margin: 15px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+  color: white;
+}
+
+.artist {
+  font-size: 14px;
+  color: #aaa;
+}
+
+.timelineSlider {
+  width: 100%;
+  margin-top: 10px;
+  accent-color: #6b39f4;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.button {
+  background: none;
+  border-radius: 50%;
+  padding: 10px 15px;
+  cursor: pointer;
+  color: #fff;
+  transition: background 0.2s ease;
+  border: none;
+  outline: none !important;
+}
+
+.button:hover {
+  background-color: #6b39f4;
+}
+
+.button i {
+  font-size: 20px;
+}
+</style>
