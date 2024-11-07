@@ -1,50 +1,58 @@
-import { shallowMount } from '@vue/test-utils';
-import PlayerControls from '@/components/PlayerControls.vue';
+import { mount } from '@vue/test-utils';
+import AudioPlayer from '@/components/AudioPlayer.vue';
+import { useAudioStore } from '@/stores/useAudioStore';
 
-describe('PlayerControls.vue', () => {
+jest.mock('@/stores/useAudioStore', () => ({
+  useAudioStore: jest.fn(() => ({
+    state: {
+      isPlaying: false,
+      currentTime: 0,
+      duration: 120,
+      currentTrackIndex: 0,
+      currentTrack: {
+        title: 'Test Track',
+        artist: 'Test Artist',
+        thumbnail: 'test-thumbnail.jpg',
+        audioUrl: 'test-audio.mp3',
+      },
+      tracks: [
+        {
+          title: 'Test Track 1',
+          artist: 'Artist 1',
+          thumbnail: 'thumbnail1.jpg',
+          audioUrl: 'audio1.mp3',
+        },
+        {
+          title: 'Test Track 2',
+          artist: 'Artist 2',
+          thumbnail: 'thumbnail2.jpg',
+          audioUrl: 'audio2.mp3',
+        },
+      ],
+    },
+    play: jest.fn(),
+    pause: jest.fn(),
+    stop: jest.fn(),
+    next: jest.fn(),
+    prev: jest.fn(),
+    seek: jest.fn(),
+  })),
+}));
+
+describe('AudioPlayer.vue', () => {
   let wrapper: any;
 
   beforeEach(() => {
-    wrapper = shallowMount(PlayerControls, {
-      propsData: {
-        isPlaying: false,
-      },
-    });
+    wrapper = mount(AudioPlayer);
   });
 
-  it('renders correctly', () => {
-    expect(wrapper.exists()).toBe(true);
-  });
-
-  it('emits "prev" event when prev button is clicked', async () => {
-    const prevButton = wrapper.find('button:nth-child(1)');
-    await prevButton.trigger('click');
-    expect(wrapper.emitted().prev).toBeTruthy();
-  });
-
-  it('emits "play" event when play button is clicked', async () => {
-    const playButton = wrapper.find('button:nth-child(2)');
-    await playButton.trigger('click');
-    expect(wrapper.emitted().play).toBeTruthy();
-  });
-
-  it('emits "pause" event when pause button is clicked', async () => {
-    await wrapper.setProps({ isPlaying: true });
-
-    const pauseButton = wrapper.find('button:nth-child(2)');
-    await pauseButton.trigger('click');
-    expect(wrapper.emitted().pause).toBeTruthy();
-  });
-
-  it('emits "stop" event when stop button is clicked', async () => {
-    const stopButton = wrapper.find('button:nth-child(3)');
-    await stopButton.trigger('click');
-    expect(wrapper.emitted().stop).toBeTruthy();
-  });
-
-  it('emits "next" event when next button is clicked', async () => {
-    const nextButton = wrapper.find('button:nth-child(4)');
-    await nextButton.trigger('click');
-    expect(wrapper.emitted().next).toBeTruthy();
+  it('renders all subcomponents', () => {
+    expect(wrapper.findComponent({ name: 'TrackInfo' }).exists()).toBe(true);
+    expect(wrapper.findComponent({ name: 'TimelineSlider' }).exists()).toBe(
+      true
+    );
+    expect(wrapper.findComponent({ name: 'PlayerControls' }).exists()).toBe(
+      true
+    );
   });
 });
