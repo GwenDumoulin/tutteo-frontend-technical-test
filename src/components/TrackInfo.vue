@@ -5,7 +5,7 @@
       alt="Thumbnail"
       :class="$style.thumbnail"
     />
-    <div>
+    <div :class="$style.containerInfo">
       <div :class="$style.title">{{ audioState.currentTrack.title }}</div>
       <div :class="$style.artist">{{ audioState.currentTrack.artist }}</div>
     </div>
@@ -42,6 +42,10 @@ export default defineComponent({
   height: 180px;
   border-radius: 10px;
   margin: 15px;
+}
+
+.containerInfo {
+  min-height: 75px;
 }
 
 .title {
