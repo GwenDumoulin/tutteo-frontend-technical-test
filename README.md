@@ -2,11 +2,9 @@
 
 ## Description
 
-This application is an interactive audio player developed with Vue 3, TypeScript, and the Composition API. It includes essential features for playing audio tracks, such as play, pause, stop, navigation between tracks, and time control via a progress bar.
+This application is an interactive audio player developed with Vue 3, TypeScript, and Composition API. It includes essential features for playing audio tracks, such as play, pause, stop, navigation between tracks, and time control via a progress bar.
 
 The design is intuitive, responsive, and visually polished to ensure an optimal user experience.
-
----
 
 ## Features
 
@@ -15,8 +13,6 @@ The design is intuitive, responsive, and visually polished to ensure an optimal 
 - **Progress bar:** Visualize and adjust playback time.
 - **Track information:** Display details of the current track (title, artist, thumbnail).
 - **Playlist management:** Handle a playlist with multiple audio tracks.
-
----
 
 ## Installation and Execution
 
@@ -59,8 +55,6 @@ npm run build
 or
 yarn build
 ```
-
----
 
 ## Tests
 
